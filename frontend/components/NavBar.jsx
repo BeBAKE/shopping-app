@@ -11,7 +11,6 @@ import Logo from "./Logo"
 import CartIcon from "./CartIcon"
 import { LogoOpen } from "../src/assets/HamburgerIcon"
 
-import SubtotalSelector from "../store/selector/SubtotalSelector"
 import CartIconTotal from "../store/selector/CartIconTotal"
 import cartAtom from "../store/atom/cartAtom"
 import orderAtom from "../store/atom/orderAtom"
