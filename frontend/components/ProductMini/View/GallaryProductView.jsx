@@ -6,7 +6,7 @@ const GallaryProductView = ({productArray})=>{
 
       {productArray.map((product,index)=>{
         return <div key={index}>
-          <GallaryProduct name={product.name} price={product.price} image={product.image} />
+          <GallaryProduct id={product._id} name={product.name} price={product.price} image={product.image} />
         </div>
       })}
     

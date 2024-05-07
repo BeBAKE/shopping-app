@@ -1,31 +1,54 @@
-import { useCallback, useState } from "react"
+import { useCallback, useState,useRef } from "react"
+import { useNavigate } from "react-router-dom"
+
+import axios from "axios"
+import { useSetRecoilState } from "recoil"
 
 import InputBox from "../components/Login/InputBox"
 import Heading from "../components/Login/Heading"
 import LoginButton from "../components/Login/LoginButton"
 import BottomWarning from "../components/Login/BottomWarning"
+import cartAtom from "../store/atom/cartAtom"
+import orderAtom from '../store/atom/orderAtom'
+import { notifyFailure, notifySuccess } from "../components/Toastify"
 
-import axios from "axios"
 
 const Login = () => {
-  const [user,setUser] = useState({
-    email : "",
-    password : ""
-  })
+  const navigate = useNavigate();
+  const setCart = useSetRecoilState(cartAtom)
+  const setOrder = useSetRecoilState(orderAtom)
 
+  const emailRef = useRef()
+  const passwordRef = useRef()
+  // const [user,setUser] = useState({
+  //   email : "",
+  //   password : ""
+  // })
+// res.data - {cart: {cart:[],userId…}, message: 'User logged in successfully'}
   const submit = useCallback(async()=>{
-    console.log(user)
     try {
       const res = await axios({
         method : 'post',
         url : "http://localhost:4000/api/v1/user/signin",
-        data : user
+        data : {
+          email : emailRef.current.value,
+          password : passwordRef.current.value
+        },
+        withCredentials : true
       })
-      console.log(res)
+      // console.log(res.data)
+
+      localStorage.setItem('cart',JSON.stringify(res.data.cart.cart))
+      localStorage.setItem('order',(res.data.order?.order) ? JSON.stringify(res.data.order.order) : [])
+
+      setCart(JSON.parse(localStorage.getItem('cart')))
+      setOrder( (res.data.order?.order) ? JSON.parse(localStorage.getItem('order')) : [])
+      navigate("/")
     } catch (error) {
+      notifyFailure("Login Error")
       console.log(error.message)
     }
-  },[user])
+  },[])
 
 
 
@@ -38,22 +61,17 @@ const Login = () => {
       <Heading label={"Login"}/>
 
       <div>
-        <InputBox 
-        label={"Email"} 
-        onChange={(e)=>setUser({...user,email : e.target.value})}
+        <InputBox label={"Email"} ref={emailRef}
+        // onChange={(e)=>setUser({...user,email : e.target.value})}
         />
-        <InputBox 
-        label={"Password"} 
-        onChange={(e)=>setUser({...user,password : e.target.value})}
+        <InputBox label={"Password"} ref={passwordRef}
+        // onChange={(e)=>setUser({...user,password : e.target.value})}
         />
       </div>
 
-      <LoginButton label={"Login"}
-      onClick={submit}
-      />
+      <LoginButton label={"Login"} onClick={submit}/>
 
-      <BottomWarning label={"Register"} path={"/register"} 
-      message="Not a member yet?"/>
+      <BottomWarning label={"Register"} path={"/register"} message="Not a member yet?"/>
 
       {/* <NavLink to="/home">Home</NavLink> */}
 

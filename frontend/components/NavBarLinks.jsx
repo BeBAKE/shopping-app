@@ -6,7 +6,7 @@ const NavBarLinks = () => {
   return <>
     <div>
       <ul className="flex flex-col lg:flex-row lg:justify-around lg:items-center h-12">
-        <li><SingleLink path={'/home'} label={"Home"}/></li>
+        <li><SingleLink path={'/'} label={"Home"}/></li>
         <li><SingleLink path={'/about'} label={"About"}/></li>
         <li><SingleLink path={'/productPage'} label={"Products"}/></li>
         <li><SingleLink path={'/cart'} label={"Cart"}/></li>

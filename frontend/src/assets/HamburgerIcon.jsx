@@ -1,7 +1,8 @@
 export const LogoOpen = () => {
 
-  return <div className="w-fit h-fit">
+  return <div id="hamburgerMenu" className="w-fit h-fit">
       <svg 
+        id="hamburgerMenu"
         className=""
         xmlns="http://www.w3.org/2000/svg"  
         viewBox="0 0 50 50"

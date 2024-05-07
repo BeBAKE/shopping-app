@@ -1,32 +1,44 @@
-import { useCallback, useState } from "react"
+import { useCallback, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
 
 import InputBox from "../components/Login/InputBox"
 import Heading from "../components/Login/Heading"
 import LoginButton from "../components/Login/LoginButton"
 import BottomWarning from "../components/Login/BottomWarning"
 
-import axios from "axios"
-
 const Register = () => {
-  const [user,setUser] = useState({
-    username : '',
-    email : "",
-    password : ""
-  })
+  const navigate = useNavigate()
+  const usernameRef = useRef()
+  const emailRef = useRef()
+  const passwordRef = useRef()
+  // const [user,setUser] = useState({
+  //   username : '',
+  //   email : "",
+  //   password : ""
+  // })
 
+  // {cart: {cart:[],_id:…}, token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3M…Q0N30.mOuhCnnvGnd4hPil0YLEFQf6dWRcsrpiRt_jSIwiy5w'}
   const submit = useCallback(async()=>{
-    console.log(user)
     try {
       const res = await axios({
         method : 'post',
         url : 'http://localhost:4000/api/v1/user/signup',
-        data : user
+        data : {
+          username : usernameRef.current.value,
+          email : emailRef.current.value,
+          password : passwordRef.current.value
+        },
+        withCredentials : true
       })
-      console.log(res)
+      localStorage.setItem('cart',JSON.stringify(res.data.cart.cart))
+      localStorage.setItem('order',JSON.stringify(res.data.order.order))
+      navigate('/')
     } catch (error) {
+      notifyFailure("Register Error")
       console.log(error.message)
     }
-  },[user])
+  },[])
 
   return (
   <div className="h-screen w-screen flex justify-center items-center">
@@ -36,26 +48,22 @@ const Register = () => {
       <Heading label={"Register"}/>
 
       <div>
-        <InputBox 
-        label={"Username"}
-        onChange={(e)=>setUser({...user,username : e.target.value})}/>
+        <InputBox label={"Username"} ref={usernameRef}
+        // onChange={(e)=>setUser({...user,username : e.target.value})}
+        />
 
-        <InputBox
-        label={"Email"} 
-        onChange={(e)=>setUser({...user,email : e.target.value})}/>
+        <InputBox label={"Email"} ref={emailRef}
+        // onChange={(e)=>setUser({...user,email : e.target.value})}
+        />
 
-        <InputBox 
-        label={"Password"} 
-        onChange={(e)=>setUser({...user,password : e.target.value})}/>
+        <InputBox label={"Password"} ref={passwordRef}
+        // onChange={(e)=>setUser({...user,password : e.target.value})}
+        />
       </div>
 
       <LoginButton label={"Register"} onClick={submit}/>
 
-      <BottomWarning label={"Login"} path={"/login"}
-      message={"Already a member?"}/>
-
-
-
+      <BottomWarning label={"Login"} path={"/login"} message={"Already a member"}/>
 
     </div>
 
