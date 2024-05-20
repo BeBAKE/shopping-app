@@ -81,8 +81,7 @@ const signup = async (req, res) => {
       maxAge: 1000 * 60 * 60 * 24,
       httpOnly: true,
     });
-
-    res.status(200).json({ cart, order, token: token });
+    res.status(200).json({ cart, order, username : user.username,token: token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -100,9 +99,8 @@ const signin = async (req, res) => {
 
     const user = await User.find(
       { email: email, password: password },
-      "email password"
+      "email username"
     );
-    // console.log(user);
 
     if (!user.length) {
       return res.status(409).json({
@@ -132,6 +130,7 @@ const signin = async (req, res) => {
     res.status(200).json({
       cart: cart,
       order: order,
+      username : user[0].username,
       message: "User logged in successfully",
     });
   } catch (error) {
@@ -147,8 +146,9 @@ const logout = (req, res) => {
       httpOnly: true,
       secure: false,
     });
+    return res.send("Cookie Cleared");
   }
-  return res.send("Cookie Cleared");
+  return res.status(400).json({message : "User already logged out"})
 };
 module.exports = {
   signin,

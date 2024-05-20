@@ -1,19 +1,19 @@
-import {  toast } from "react-toastify"
+import { toast } from "react-toastify"
 
 const notifySuccess = (msg) => {
-  return toast.success(msg ? `${msg}` :"Action Succeded",{
-    position : "top-center"
+  return toast.success(msg ? `${msg}` : "Action Succeded", {
+    position: "top-center"
   })
 }
-  
+
 const notifyFailure = (msg) => {
   return toast.error(msg ? `${msg}` : "Action Failed", {
-    position : 'top-center'
+    position: 'top-center'
   })
 }
 
 
-export  {
+export {
   notifyFailure,
   notifySuccess
 }

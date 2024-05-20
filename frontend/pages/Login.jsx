@@ -11,12 +11,14 @@ import BottomWarning from "../components/Login/BottomWarning"
 import cartAtom from "../store/atom/cartAtom"
 import orderAtom from '../store/atom/orderAtom'
 import { notifyFailure, notifySuccess } from "../components/Toastify"
+import Username from "../store/atom/Username"
 
 
 const Login = () => {
   const navigate = useNavigate();
   const setCart = useSetRecoilState(cartAtom)
   const setOrder = useSetRecoilState(orderAtom)
+  const setUsername = useSetRecoilState(Username)
 
   const emailRef = useRef()
   const passwordRef = useRef()
@@ -36,13 +38,16 @@ const Login = () => {
         },
         withCredentials: true
       })
-      // console.log(res.data)
+      console.log(res.data);
 
       localStorage.setItem('cart', JSON.stringify(res.data.cart.cart))
       localStorage.setItem('order', (res.data.order?.order) ? JSON.stringify(res.data.order.order) : [])
+      localStorage.setItem('username', JSON.stringify(res.data.username))
 
       setCart(JSON.parse(localStorage.getItem('cart')))
       setOrder((res.data.order?.order) ? JSON.parse(localStorage.getItem('order')) : [])
+      setUsername(JSON.parse(localStorage.getItem("username")))
+
       navigate("/")
     } catch (error) {
       notifyFailure("Login Error")
