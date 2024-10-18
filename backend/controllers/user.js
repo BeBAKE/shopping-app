@@ -78,10 +78,14 @@ const signup = async (req, res) => {
     );
 
     res.cookie("auth_token", token, {
-      maxAge: 1000 * 60 * 60 * 24,
+      expire: Math.floor(Date.now() / 1000 + 60 * 60),
       httpOnly: true,
+      secure: true,
     });
-    res.status(200).json({ cart, order, username : user.username,token: token });
+
+    res
+      .status(200)
+      .json({ cart, order, username: user.username, token: token });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -124,13 +128,13 @@ const signin = async (req, res) => {
     res.cookie("auth_token", token, {
       expire: Math.floor(Date.now() / 1000 + 60 * 60),
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
 
     res.status(200).json({
       cart: cart,
       order: order,
-      username : user[0].username,
+      username: user[0].username,
       message: "User logged in successfully",
     });
   } catch (error) {
@@ -144,11 +148,11 @@ const logout = (req, res) => {
     res.clearCookie("auth_token", {
       expire: Math.floor(Date.now() / 1000 + 60 * 60),
       httpOnly: true,
-      secure: false,
+      secure: true,
     });
     return res.send("Cookie Cleared");
   }
-  return res.status(400).json({message : "User already logged out"})
+  return res.status(400).json({ message: "User already logged out" });
 };
 module.exports = {
   signin,
