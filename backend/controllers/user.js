@@ -78,9 +78,10 @@ const signup = async (req, res) => {
     );
 
     res.cookie("auth_token", token, {
-      expire: Math.floor(Date.now() / 1000 + 60 * 60),
+      maxAge: 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
+      sameSite: "None",
     });
 
     res
@@ -126,9 +127,10 @@ const signin = async (req, res) => {
     );
 
     res.cookie("auth_token", token, {
-      expire: Math.floor(Date.now() / 1000 + 60 * 60),
+      maxAge: 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
+      sameSite: "None",
     });
 
     res.status(200).json({
@@ -145,10 +147,11 @@ const signin = async (req, res) => {
 
 const logout = (req, res) => {
   if (req?.cookies?.auth_token) {
-    res.clearCookie("auth_token", {
-      expire: Math.floor(Date.now() / 1000 + 60 * 60),
+    res.cookie("auth_token", token, {
+      maxAge: 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
+      sameSite: "None",
     });
     return res.send("Cookie Cleared");
   }
