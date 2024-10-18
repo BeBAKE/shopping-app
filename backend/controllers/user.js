@@ -145,17 +145,21 @@ const signin = async (req, res) => {
   }
 };
 
-const logout = (req, res) => {
-  if (req?.cookies?.auth_token) {
-    res.cookie("auth_token", token, {
-      maxAge: 60 * 60 * 1000,
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-    });
-    return res.send("Cookie Cleared");
+const logout = async (req, res) => {
+  try {
+    if (req?.cookies?.auth_token) {
+      res.clearCookie("auth_token", {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      });
+      return res.send("Cookie Cleared");
+    }
+    return res.status(400).json({ message: "User already logged out" });
+  } catch (error) {
+    console.log("Internal Server Error (logout) : ", error);
   }
-  return res.status(400).json({ message: "User already logged out" });
 };
 module.exports = {
   signin,
