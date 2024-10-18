@@ -2,7 +2,7 @@
 // const connectDB = require("./db");
 
 // require("dotenv").config();
-const products2 = require("./prod");
+// const products2 = require("./prod");
 
 // connectDB(process.env.MONGO_URI);
 
